@@ -7,6 +7,7 @@ from rango.models import UserProfile
 from rango.forms import UserForm, UserProfileForm
 from rango.forms import CategoryForm, PageForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
@@ -283,8 +284,9 @@ def user_login(request):
                 return HttpResponseRedirect('/rango/')
             # The account is inactive; tell by adding variable to the template context.
             else:
+                messages = messages.error(request, message="Invalid credentials")
                 context_dict['disabled_account'] = True
-                return render_to_response('rango/login.html', context_dict, context)
+                return render_to_response('rango/login.html', context_dict, context, messages)
         # Invalid login details supplied!
         else:
             print "Invalid login details: {0}, {1}".format(username, password)
